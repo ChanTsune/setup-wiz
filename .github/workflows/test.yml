@@ -1,0 +1,30 @@
+name: "Test"
+
+on:
+  push:
+  pull_request:
+
+jobs: 
+  run:
+    name: "Test"
+    runs-on: ubuntu-latest
+    steps: 
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.x
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: build
+      run: npm run build
+
+    - name: run test
+      run: npm run test
+
+    - name: Set up wiz
+      uses: ChanTsune/setup-wiz@init-project
