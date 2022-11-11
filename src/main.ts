@@ -31,7 +31,7 @@ async function main(github: ReturnType<typeof getOctokit>) {
   const tarArchivePath = await tc.downloadTool(downloadURL);
   core.info(`Download complete!`);
   core.info(`Extracting archive...`);
-  const archivePath = await tc.extractTar(`${tarArchivePath}/${artifact.name}`);
+  const archivePath = await tc.extractTar(tarArchivePath);
   core.info(`Extract complete!`);
   core.info(`Installing wiz...`);
   const exitCode = await exec.exec("sh", [`${archivePath}/install.sh`]);

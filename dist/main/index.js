@@ -13380,7 +13380,7 @@ function main(github) {
         const tarArchivePath = yield tc.downloadTool(downloadURL);
         core.info(`Download complete!`);
         core.info(`Extracting archive...`);
-        const archivePath = yield tc.extractTar(`${tarArchivePath}/${artifact.name}`);
+        const archivePath = yield tc.extractTar(tarArchivePath);
         core.info(`Extract complete!`);
         core.info(`Installing wiz...`);
         const exitCode = yield exec.exec("sh", [`${archivePath}/install.sh`]);
