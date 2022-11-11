@@ -1,8 +1,9 @@
-import { Outputs } from "../src/output";
+import { Output } from "../src/output";
 
 describe("Output", () => {
   test("", (done) => {
-    const output = new Outputs("path", "version");
+    const output = new Output("path", "version");
+    expect(output.version).toBe("version");
     done();
   });
 });

@@ -13375,7 +13375,8 @@ const exec = __importStar(__nccwpck_require__(5082));
 const tc = __importStar(__nccwpck_require__(2721));
 const utils_1 = __nccwpck_require__(9635);
 const input_1 = __nccwpck_require__(8727);
-function main(input, github) {
+const output_1 = __nccwpck_require__(2806);
+function main(input, github, callback, failure) {
     return __awaiter(this, void 0, void 0, function* () {
         // Check platform
         const releaseListResponse = yield github.rest.repos.listReleases({
@@ -13384,13 +13385,13 @@ function main(input, github) {
         });
         const releaseList = releaseListResponse.data.filter((it) => it.tag_name == input.version);
         if (releaseList.length === 0) {
-            core.setFailed("No release available");
+            failure("No release available");
             return;
         }
         const release = releaseList[0];
         const assets = release.assets.filter((it) => it.name.startsWith("wiz-Linux"));
         if (assets.length === 0) {
-            core.setFailed("No artifact found");
+            failure("No artifact found");
             return;
         }
         const artifact = assets[0];
@@ -13403,21 +13404,45 @@ function main(input, github) {
         core.info(`Extract complete!`);
         core.info(`Installing wiz...`);
         const exitCode = yield exec.exec("sh", [`${archivePath}/install.sh`]);
-        if (exitCode != 0) {
-            core.setFailed("Install failed.");
+        if (exitCode !== 0) {
+            failure("Install failed.");
             return;
         }
         core.addPath("~/.wiz/bin");
         core.info(`Install complete!`);
+        callback(new output_1.Outputs("~./wiz/bin", release.tag_name));
     });
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         const input = new input_1.Input(core.getInput("version", { required: false, trimWhitespace: true }));
-        return yield main(input, new utils_1.GitHub());
+        return yield main(input, new utils_1.GitHub(), (output) => {
+            core.setOutput("path", output.path);
+            core.setOutput("version", output.version);
+        }, (message) => {
+            core.setFailed(message);
+        });
     });
 }
 run();
+
+
+/***/ }),
+
+/***/ 2806:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Outputs = void 0;
+class Outputs {
+    constructor(path, version) {
+        this.path = path;
+        this.version = version;
+    }
+}
+exports.Outputs = Outputs;
 
 
 /***/ }),
