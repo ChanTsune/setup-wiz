@@ -3,15 +3,16 @@ import * as exec from "@actions/exec";
 import * as tc from "@actions/tool-cache";
 import { getOctokit } from "@actions/github";
 import { GitHub } from "@actions/github/lib/utils";
+import { Input } from "./input";
 
-async function main(github: ReturnType<typeof getOctokit>) {
+async function main(input: Input, github: ReturnType<typeof getOctokit>) {
   // Check platform
   const releaseListResponse = await github.rest.repos.listReleases({
     owner: "ChanTsune",
     repo: "wiz",
   });
   const releaseList = releaseListResponse.data.filter(
-    (it) => it.tag_name == "dev-latest"
+    (it) => it.tag_name == input.version
   );
   if (releaseList.length === 0) {
     core.setFailed("No release available");
@@ -43,4 +44,11 @@ async function main(github: ReturnType<typeof getOctokit>) {
   core.info(`Install complete!`);
 }
 
-main(new GitHub());
+async function run() {
+  const input = new Input(
+    core.getInput("version", { required: false, trimWhitespace: true })
+  );
+  return await main(input, new GitHub());
+}
+
+run();
