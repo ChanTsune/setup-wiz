@@ -3,7 +3,7 @@ name: "Build and commit"
 on:
   push:
     branches:
-      - master
+      - main
 jobs: 
   run:
     name: "Build and commit"
