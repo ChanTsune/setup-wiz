@@ -28,3 +28,7 @@ jobs:
 
     - name: Set up wiz
       uses: ./
+    - name: echo wiz version
+      run: |
+        wiz --version
+        wizc --help
