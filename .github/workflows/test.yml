@@ -27,4 +27,4 @@ jobs:
       run: npm run test
 
     - name: Set up wiz
-      uses: ChanTsune/setup-wiz@init-project
+      uses: ./
