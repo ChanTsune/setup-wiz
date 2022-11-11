@@ -6,29 +6,32 @@ import { GitHub } from "@actions/github/lib/utils";
 
 async function main(github: ReturnType<typeof getOctokit>) {
   // Check platform
-
-  const response = await github.rest.actions.listArtifactsForRepo({
+  const releaseListResponse = await github.rest.repos.listReleases({
     owner: "ChanTsune",
     repo: "wiz",
   });
-
-  const platformArtifacts = response.data.artifacts.filter(
-    (it) => it.name === "wiz-Linux"
+  const releaseList = releaseListResponse.data.filter(
+    (it) => it.tag_name == "dev-latest"
   );
+  if (releaseList.length === 0) {
+    core.setFailed("No release available");
+    return;
+  }
+  const release = releaseList[0];
+  const assets = release.assets.filter((it) => it.name.startsWith("wiz-Linux"));
 
-  if (platformArtifacts.length === 0) {
+  if (assets.length === 0) {
     core.setFailed("No artifact found");
     return;
   }
 
-  const artifact = platformArtifacts[0];
-  const downloadURL = artifact.archive_download_url;
+  const artifact = assets[0];
+  const downloadURL = artifact.browser_download_url;
   core.info(`Downloading archive from ${downloadURL}`);
-  const zipArchivePath = await tc.downloadTool(downloadURL);
+  const tarArchivePath = await tc.downloadTool(downloadURL);
   core.info(`Download complete!`);
   core.info(`Extracting archive...`);
-  const tarArchivePath = await tc.extractZip(zipArchivePath);
-  const archivePath = await tc.extractTar(`${tarArchivePath}/archive.tar.gz`);
+  const archivePath = await tc.extractTar(`${tarArchivePath}/${artifact.name}`);
   core.info(`Extract complete!`);
   core.info(`Installing wiz...`);
   const exitCode = await exec.exec("sh", [`${archivePath}/install.sh`]);

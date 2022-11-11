@@ -13359,23 +13359,28 @@ const utils_1 = __nccwpck_require__(3030);
 function main(github) {
     return __awaiter(this, void 0, void 0, function* () {
         // Check platform
-        const response = yield github.rest.actions.listArtifactsForRepo({
+        const releaseListResponse = yield github.rest.repos.listReleases({
             owner: "ChanTsune",
             repo: "wiz",
         });
-        const platformArtifacts = response.data.artifacts.filter((it) => it.name === "wiz-Linux");
-        if (platformArtifacts.length === 0) {
+        const releaseList = releaseListResponse.data.filter((it) => it.tag_name == "dev-latest");
+        if (releaseList.length === 0) {
+            core.setFailed("No release available");
+            return;
+        }
+        const release = releaseList[0];
+        const assets = release.assets.filter((it) => it.name.startsWith("wiz-Linux"));
+        if (assets.length === 0) {
             core.setFailed("No artifact found");
             return;
         }
-        const artifact = platformArtifacts[0];
-        const downloadURL = artifact.archive_download_url;
+        const artifact = assets[0];
+        const downloadURL = artifact.browser_download_url;
         core.info(`Downloading archive from ${downloadURL}`);
-        const zipArchivePath = yield tc.downloadTool(downloadURL);
+        const tarArchivePath = yield tc.downloadTool(downloadURL);
         core.info(`Download complete!`);
         core.info(`Extracting archive...`);
-        const tarArchivePath = yield tc.extractZip(zipArchivePath);
-        const archivePath = yield tc.extractTar(`${tarArchivePath}/archive.tar.gz`);
+        const archivePath = yield tc.extractTar(`${tarArchivePath}/${artifact.name}`);
         core.info(`Extract complete!`);
         core.info(`Installing wiz...`);
         const exitCode = yield exec.exec("sh", [`${archivePath}/install.sh`]);
