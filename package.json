@@ -1,0 +1,78 @@
+{
+  "name": "setup-wiz",
+  "version": "0.0.0",
+  "private": true,
+  "description": "setup wiz language",
+  "author": "ChanTsune",
+  "license": "MIT",
+  "repository": "https://github.com/ChanTsune/setup-wiz.git",
+  "homepage": "https://github.com/ChanTsune/setup-wiz",
+  "bugs": "https://github.com/ChanTsune/setup-wiz/issues",
+  "keywords": [
+    "github",
+    "wiz"
+  ],
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write **/*.ts",
+    "format-check": "prettier --check **/*.ts",
+    "lint": "eslint src/**/*.ts",
+    "package": "ncc build -o dist/main src/main.ts",
+    "test": "jest",
+    "all": "npm run build && npm run format && npm run lint && npm run package && npm test"
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@actions/exec": "^1.1.1",
+    "@actions/github": "^5.1.1",
+    "@actions/tool-cache": "^2.0.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.5.0",
+    "@typescript-eslint/eslint-plugin": "^5.42.1",
+    "@typescript-eslint/parser": "^5.42.1",
+    "@vercel/ncc": "^0.34.0",
+    "eslint": "^8.27.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-jest": "^27.1.4",
+    "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^27.5.1",
+    "nock": "13.2.9",
+    "prettier": "2.7.1",
+    "standard": "^17.0.0",
+    "ts-jest": "^27.1.4",
+    "typescript": "^4.8.4"
+  },
+  "engines": {
+    "node": ">= 16.17.0"
+  },
+  "standard": {
+    "parser": "@typescript-eslint/parser",
+    "env": [
+      "jest"
+    ],
+    "plugins": [
+      "typescript"
+    ]
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/src/",
+      "<rootDir>/test/"
+    ],
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.[tj]sx?$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  }
+}
