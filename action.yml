@@ -1,7 +1,6 @@
 name: 'setup-wiz'
 description: 'Setup wiz language'
 author: 'ChanTsune'
-inputs:
 
 outputs:
   path:
