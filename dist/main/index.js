@@ -13370,14 +13370,21 @@ function main(github) {
         }
         const artifact = platformArtifacts[0];
         const downloadURL = artifact.archive_download_url;
+        core.info(`Downloading archive from ${downloadURL}`);
         const zipArchivePath = yield tc.downloadTool(downloadURL);
+        core.info(`Download complete!`);
+        core.info(`Extracting archive...`);
         const tarArchivePath = yield tc.extractZip(zipArchivePath);
         const archivePath = yield tc.extractTar(`${tarArchivePath}/archive.tar.gz`);
-        const exitCode = yield exec.exec('sh', [`${archivePath}/install.sh`]);
+        core.info(`Extract complete!`);
+        core.info(`Installing wiz...`);
+        const exitCode = yield exec.exec("sh", [`${archivePath}/install.sh`]);
         if (exitCode != 0) {
             core.setFailed("Install failed.");
             return;
         }
+        core.addPath("~/.wiz/bin");
+        core.info(`Install complete!`);
     });
 }
 main(new utils_1.GitHub());
