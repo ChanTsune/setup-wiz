@@ -1,3 +1,3 @@
-export class Outputs {
-  constructor(path: string, version: string) {}
+export class Output {
+  constructor(public path: string, public version: string) {}
 }

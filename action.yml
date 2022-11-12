@@ -1,7 +1,11 @@
 name: 'setup-wiz'
 description: 'Setup wiz language'
 author: 'ChanTsune'
-
+inputs:
+  version:
+    description: 'The install version of wiz. The latest version of wiz will install with the default.'
+    required: false
+    default: ''
 outputs:
   path:
     description: 'The path of wiz installed'
