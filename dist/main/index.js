@@ -13410,7 +13410,7 @@ function main(input, github, callback, failure) {
         }
         core.addPath("~/.wiz/bin");
         core.info(`Install complete!`);
-        callback(new output_1.Outputs("~./wiz/bin", release.tag_name));
+        callback(new output_1.Output("~./wiz/bin", release.tag_name));
     });
 }
 function run() {
@@ -13435,14 +13435,14 @@ run();
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Outputs = void 0;
-class Outputs {
+exports.Output = void 0;
+class Output {
     constructor(path, version) {
         this.path = path;
         this.version = version;
     }
 }
-exports.Outputs = Outputs;
+exports.Output = Output;
 
 
 /***/ }),
