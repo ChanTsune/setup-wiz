@@ -4018,6 +4018,10 @@ const exec = __importStar(__nccwpck_require__(82));
 const input_1 = __nccwpck_require__(727);
 function post(input, failure) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (!input.uninstall) {
+            core.info("Post prosess do noting.");
+            return 0;
+        }
         return yield core.group("Uninstall wiz", () => __awaiter(this, void 0, void 0, function* () {
             const returnCode = yield exec.exec("rm", ["-rf", "~/.wiz"]);
             if (returnCode !== 0) {

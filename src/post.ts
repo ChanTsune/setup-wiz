@@ -3,6 +3,10 @@ import * as exec from "@actions/exec";
 import { Input } from "./input";
 
 async function post(input: Input, failure: (message: string | Error) => void) {
+  if (!input.uninstall) {
+    core.info("Post prosess do noting.");
+    return 0;
+  }
   return await core.group("Uninstall wiz", async () => {
     const returnCode = await exec.exec("rm", ["-rf", "~/.wiz"]);
     if (returnCode !== 0) {
