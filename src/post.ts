@@ -20,8 +20,8 @@ async function post(input: Input, failure: (message: string | Error) => void) {
 
 async function run() {
   const input = new Input(
-    core.getInput("version", { required: false, trimWhitespace: true }),
-    core.getBooleanInput("uninstall", { required: false })
+    core.getInput(Input.VERSION, { required: false, trimWhitespace: true }),
+    core.getBooleanInput(Input.UNINSTALL, { required: false })
   );
   return await post(input, (message) => {
     core.setFailed(message);

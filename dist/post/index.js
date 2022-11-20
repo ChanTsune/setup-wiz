@@ -3971,6 +3971,8 @@ class Input {
     }
 }
 exports.Input = Input;
+Input.VERSION = "version";
+Input.UNINSTALL = "uninstall";
 
 
 /***/ }),
@@ -4035,7 +4037,7 @@ function post(input, failure) {
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        const input = new input_1.Input(core.getInput("version", { required: false, trimWhitespace: true }), core.getBooleanInput("uninstall", { required: false }));
+        const input = new input_1.Input(core.getInput(input_1.Input.VERSION, { required: false, trimWhitespace: true }), core.getBooleanInput(input_1.Input.UNINSTALL, { required: false }));
         return yield post(input, (message) => {
             core.setFailed(message);
         });
