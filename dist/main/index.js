@@ -13399,21 +13399,33 @@ function main(input, github, callback, failure) {
             return;
         }
         const artifact = assets[0];
-        const downloadURL = artifact.browser_download_url;
-        core.info(`Downloading archive from ${downloadURL}`);
-        const tarArchivePath = yield tc.downloadTool(downloadURL);
-        core.info(`Download complete!`);
-        core.info(`Extracting archive...`);
-        const archivePath = yield tc.extractTar(tarArchivePath);
-        core.info(`Extract complete!`);
-        core.info(`Installing wiz...`);
-        const exitCode = yield exec.exec("sh", [`${archivePath}/install.sh`]);
+        const tarArchivePath = yield core.group("Download archive", () => __awaiter(this, void 0, void 0, function* () {
+            const downloadURL = artifact.browser_download_url;
+            core.info(`Downloading from ${downloadURL}`);
+            const tarArchivePath = yield tc.downloadTool(downloadURL);
+            core.info(`Download complete!`);
+            return tarArchivePath;
+        }));
+        const archivePath = yield core.group("Extract archive", () => __awaiter(this, void 0, void 0, function* () {
+            core.info(`Extracting archive...`);
+            const archivePath = yield tc.extractTar(tarArchivePath);
+            core.info(`Extract complete!`);
+            return archivePath;
+        }));
+        const exitCode = yield core.group("Install wiz", () => __awaiter(this, void 0, void 0, function* () {
+            core.info(`Installing wiz...`);
+            const exitCode = yield exec.exec("sh", [`${archivePath}/install.sh`]);
+            if (exitCode !== 0) {
+                return exitCode;
+            }
+            core.addPath("~/.wiz/bin");
+            core.info(`Install complete!`);
+            return exitCode;
+        }));
         if (exitCode !== 0) {
             failure("Install failed.");
             return;
         }
-        core.addPath("~/.wiz/bin");
-        core.info(`Install complete!`);
         callback(new output_1.Output("~./wiz/bin", release.tag_name));
     });
 }
