@@ -53,7 +53,8 @@ async function main(
 
 async function run() {
   const input = new Input(
-    core.getInput("version", { required: false, trimWhitespace: true })
+    core.getInput("version", { required: false, trimWhitespace: true }),
+    core.getBooleanInput("uninstall", { required: false })
   );
   return await main(
     input,
