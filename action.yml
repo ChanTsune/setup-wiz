@@ -6,6 +6,10 @@ inputs:
     description: 'The install version of wiz. The latest version of wiz will install with the default.'
     required: false
     default: ''
+  uninstall:
+    description: 'Uninstall wiz in post process'
+    required: false
+    default: false
 outputs:
   path:
     description: 'The path of wiz installed'
@@ -14,6 +18,7 @@ outputs:
 runs:
   using: 'node16'
   main: 'dist/main/index.js'
+  post: 'dist/post/index.js'
 branding:
   icon: 'tag'
   color: 'gray-dark'
