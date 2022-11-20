@@ -33,21 +33,35 @@ async function main(
   }
 
   const artifact = assets[0];
-  const downloadURL = artifact.browser_download_url;
-  core.info(`Downloading archive from ${downloadURL}`);
-  const tarArchivePath = await tc.downloadTool(downloadURL);
-  core.info(`Download complete!`);
-  core.info(`Extracting archive...`);
-  const archivePath = await tc.extractTar(tarArchivePath);
-  core.info(`Extract complete!`);
-  core.info(`Installing wiz...`);
-  const exitCode = await exec.exec("sh", [`${archivePath}/install.sh`]);
+  const tarArchivePath = await core.group("Download archive", async () => {
+    const downloadURL = artifact.browser_download_url;
+    core.info(`Downloading from ${downloadURL}`);
+    const tarArchivePath = await tc.downloadTool(downloadURL);
+    core.info(`Download complete!`);
+    return tarArchivePath;
+  });
+
+  const archivePath = await core.group("Extract archive", async () => {
+    core.info(`Extracting archive...`);
+    const archivePath = await tc.extractTar(tarArchivePath);
+    core.info(`Extract complete!`);
+    return archivePath;
+  });
+
+  const exitCode = await core.group("Install wiz", async () => {
+    core.info(`Installing wiz...`);
+    const exitCode = await exec.exec("sh", [`${archivePath}/install.sh`]);
+    if (exitCode !== 0) {
+      return exitCode;
+    }
+    core.addPath("~/.wiz/bin");
+    core.info(`Install complete!`);
+    return exitCode;
+  });
   if (exitCode !== 0) {
     failure("Install failed.");
     return;
   }
-  core.addPath("~/.wiz/bin");
-  core.info(`Install complete!`);
   callback(new Output("~./wiz/bin", release.tag_name));
 }
 
