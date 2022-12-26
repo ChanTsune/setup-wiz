@@ -66,13 +66,17 @@ async function main(
 }
 
 async function run() {
+  const env = process.env;
+  const githubToken = env.GITHUB_TOKEN;
+  const github = githubToken ? getOctokit(githubToken) : new GitHub();
+
   const input = new Input(
     core.getInput(Input.VERSION, { required: false, trimWhitespace: true }),
     core.getBooleanInput(Input.UNINSTALL, { required: false })
   );
   return await main(
     input,
-    new GitHub(),
+    github,
     (output) => {
       core.setOutput("path", output.path);
       core.setOutput("version", output.version);
