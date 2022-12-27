@@ -30,6 +30,8 @@ jobs:
       uses: ./
       with:
         uninstall: true
+      env:
+        GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}' # This is optional
     - name: echo wiz version
       run: |
         wiz --version
