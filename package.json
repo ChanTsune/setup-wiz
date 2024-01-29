@@ -39,7 +39,7 @@
     "eslint-plugin-jest": "^27.6.0",
     "eslint-plugin-prettier": "^5.0.1",
     "jest": "^27.5.1",
-    "nock": "13.4.0",
+    "nock": "13.5.1",
     "prettier": "3.2.2",
     "standard": "^17.1.0",
     "ts-jest": "^27.1.4",
